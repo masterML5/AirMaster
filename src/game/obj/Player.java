@@ -109,10 +109,12 @@ public class Player extends HpRender{
         afx.rotate(Math.toRadians(angle), PLAYER_SIZE / 2, PLAYER_SIZE / 2);
         return new Area(afx.createTransformedShape(playerShap));
     }
+     
      public boolean isAlive(){
+         
          return alive;
      }
-     public void sertAlive(boolean alive){
+     public void setAlive(boolean alive){
          this.alive=alive;
      }
      public void reset(){

@@ -7,6 +7,7 @@ package game.component;
 
 import game.obj.Bullet;
 import game.obj.Effect;
+import game.obj.HP;
 import game.obj.Player;
 import game.obj.Rocket;
 
@@ -46,13 +47,14 @@ public class Panel extends JComponent {
     private int width;
     private int height;
     private Thread thread;
+    private HP hp;
     private boolean start = true;
     private Graphics2D g2;
     private BufferedImage image;
     private Key key;
     private int shotTime;
     private String playerName;
-
+    
     private final int FPS = 60;
     private final int TARGET_TIME = 1000000000 / FPS;
 
@@ -70,6 +72,7 @@ public class Panel extends JComponent {
             System.out.println(ex);
 
         }
+        
         width = getWidth();
         height = getHeight();
         this.playerName = playername;
@@ -210,6 +213,7 @@ public class Panel extends JComponent {
                             player.speedDown();
                         }
                         player.update();
+                        
                         player.changeAngle(angle);
                     } else {
                         if (key.isKey_f1()) {
@@ -260,7 +264,10 @@ public class Panel extends JComponent {
                             rocket.update();
                             if (!rocket.check(width, height)) {
                                 rockets.remove(rocket);
-
+                                if(!player.updateHP(5)){
+                                    player.setAlive(false);
+                                };
+                                
                             } else {
                                 if (player.isAlive()) {
                                     checkPlayer(rocket);
@@ -289,7 +296,7 @@ public class Panel extends JComponent {
     return output;
 }
     public ArrayList scores() throws SQLException {
-        String sqlScores = "SELECT * FROM scores order by score desc LIMIT 20";
+        String sqlScores = "SELECT * FROM scores group by player order by score desc LIMIT 20";
         PreparedStatement pstScores = conSQL.prepareStatement(sqlScores);
         ResultSet rsScores = pstScores.executeQuery();
         ArrayList scores = new ArrayList();
@@ -434,7 +441,7 @@ public class Panel extends JComponent {
 
                 }
                 if (!player.updateHP(rocketHp)) {
-                    player.sertAlive(false);
+                    player.setAlive(false);
                     double x = player.getX() + Player.PLAYER_SIZE / 2;
                     double y = player.getY() + Player.PLAYER_SIZE / 2;
                     boomEffects.add(new Effect(x, y, 5, 5, 75, 0.05f, new Color(32, 178, 169)));

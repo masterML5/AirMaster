@@ -109,7 +109,7 @@ public class StartMenu extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -137,7 +137,7 @@ public class StartMenu extends javax.swing.JFrame {
                 .addComponent(jButton3)
                 .addGap(18, 18, 18)
                 .addComponent(jButton4)
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -167,11 +167,17 @@ public class StartMenu extends javax.swing.JFrame {
 
     private void jButton3MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseReleased
         JOptionPane.showMessageDialog(null, "<html> "
+                + "Kontrole : <br>"
                 + "<b>W</b> - napred (gas)<br>"
                 + "<b>D</b> - rotacija desno<br>"
                 + "<b>A</b> - rotacija levo<br>"
                 + "<b>SPACE</b> - pucanje (slabija municija)<br>"
                 + "<b>CTRL</b> - pucanje (jaca municija) <br>"
+                + "<br>"
+                + "<br>"
+                + "Pravila igrice : <br>"
+                + "<b>Ukoliko raketa pobegne avionu (igracu) iz vidokruga igrac gubi 5hp</b> <br>"
+                + "<b>Ukoliko avion (igrac) dodirne raketu gubi onoliko helta koliko raketa ima<b><br>"
                 + "</html>", "Instrukcije", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jButton3MouseReleased
 
@@ -201,7 +207,7 @@ public class StartMenu extends javax.swing.JFrame {
     return output;
 }
     public ArrayList scores() throws SQLException {
-        String sqlScores = "SELECT * FROM scores order by score desc LIMIT 20";
+        String sqlScores = "SELECT * FROM scores group by player order by score  desc LIMIT 20 ";
         PreparedStatement pstScores = conSQL.prepareStatement(sqlScores);
         ResultSet rsScores = pstScores.executeQuery();
         ArrayList scores = new ArrayList();
