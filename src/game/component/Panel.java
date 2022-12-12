@@ -216,7 +216,7 @@ public class Panel extends JComponent {
                             resetGame();
                         } else if (key.isKey_f3()) {
                             try {
-                                start = false;
+                                
                                 String output = showScores();
                                 int op = JOptionPane.showConfirmDialog(null, output, "Scores", JOptionPane.OK_CANCEL_OPTION);   
                                
@@ -234,7 +234,7 @@ public class Panel extends JComponent {
                                 
                            
                         } else if (key.isKey_f2()) {
-                            start = false;
+                           
                             try {
                                 if(saveScores(playerName,Integer.valueOf(score))){
                                     int op = JOptionPane.showConfirmDialog(null, "Data recorded \n Start over?", "Scores", JOptionPane.OK_CANCEL_OPTION);  
@@ -277,16 +277,19 @@ public class Panel extends JComponent {
     }
     public String showScores() throws SQLException {
     ArrayList msg = scores();
-        String output = "Player scores \n";
+        String output = "Player scores TOP 20\n";
+        output += "========================= \n";
     for (int i = 0; i < msg.size(); i++) {
         String message = msg.get(i).toString();
         output += message + "\n";
     }
+        output += "=========================\n";
+        output += "Start over?";
         
     return output;
 }
     public ArrayList scores() throws SQLException {
-        String sqlScores = "SELECT * FROM scores order by score desc";
+        String sqlScores = "SELECT * FROM scores order by score desc LIMIT 20";
         PreparedStatement pstScores = conSQL.prepareStatement(sqlScores);
         ResultSet rsScores = pstScores.executeQuery();
         ArrayList scores = new ArrayList();
@@ -520,12 +523,6 @@ public class Panel extends JComponent {
         bullets.clear();
         player.changeLocation(150, 150);
         player.reset();
-        
-        thread.stop();
-        start(playerName);
-        start = true;
-        
-        
 
     }
 
