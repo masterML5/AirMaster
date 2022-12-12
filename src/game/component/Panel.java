@@ -9,6 +9,7 @@ import game.obj.Bullet;
 import game.obj.Effect;
 import game.obj.HP;
 import game.obj.Player;
+import static game.obj.Player.PLAYER_SIZE;
 import game.obj.Rocket;
 
 import java.awt.Color;
@@ -31,13 +32,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static javafx.scene.input.DataFormat.URL;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
@@ -63,16 +62,15 @@ public class Panel extends JComponent {
     private Image bg;
     private final int FPS = 60;
     private final int TARGET_TIME = 1000000000 / FPS;
-
+    
     private Player player;
     private List<Bullet> bullets;
     private List<Rocket> rockets;
     private List<Effect> boomEffects;
     private int score = 0;
-   
 
     public Panel() throws IOException {
-        
+
     }
 
     public void start(String playername) throws IOException {
@@ -83,8 +81,9 @@ public class Panel extends JComponent {
             System.out.println(ex);
 
         }
-       
-        bg = Toolkit.getDefaultToolkit().getImage("/game/image/bg.jpg");
+
+        bg = Toolkit.getDefaultToolkit().createImage("/game/image/bg.jpg");
+
         width = getWidth();
         height = getHeight();
         this.playerName = playername;
@@ -196,6 +195,7 @@ public class Panel extends JComponent {
                 float s = 0.5f;
                 while (start) {
                     if (player.isAlive()) {
+                        
                         float angle = player.getAngle();
                         if (key.isKey_left()) {
                             angle -= s;
@@ -220,52 +220,48 @@ public class Panel extends JComponent {
                         }
 
                         if (key.isKey_space()) {
-                            player.speedUp();
+                            player.speedUp();   
+                            checkPosition();
                         } else {
                             player.speedDown();
                         }
                         player.update();
-                        
+
                         player.changeAngle(angle);
                     } else {
                         if (key.isKey_f1()) {
                             resetGame();
                         } else if (key.isKey_f3()) {
                             try {
-                                
+
                                 String output = showScores();
-                                int op = JOptionPane.showConfirmDialog(null, output, "Scores", JOptionPane.OK_CANCEL_OPTION);   
-                               
-                                if(op == 0){
+                                int op = JOptionPane.showConfirmDialog(null, output, "Scores", JOptionPane.OK_CANCEL_OPTION);
+
+                                if (op == 0) {
                                     resetGame();
-                                }else{
+                                } else {
                                     exitGame();
                                 }
-                                 
+
                             } catch (SQLException ex) {
                                 Logger.getLogger(Panel.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                                
-                       
-                                
-                           
+
                         } else if (key.isKey_f2()) {
-                           
+
                             try {
-                                if(saveScores(playerName,Integer.valueOf(score))){
-                                    int op = JOptionPane.showConfirmDialog(null, "Data recorded \n Start over?", "Scores", JOptionPane.OK_CANCEL_OPTION);  
-                                    if(op == 0){
-                                    resetGame();
-                                }else{
-                                    exitGame();
-                                }
+                                if (saveScores(playerName, Integer.valueOf(score))) {
+                                    int op = JOptionPane.showConfirmDialog(null, "Data recorded \n Start over?", "Scores", JOptionPane.OK_CANCEL_OPTION);
+                                    if (op == 0) {
+                                        resetGame();
+                                    } else {
+                                        exitGame();
+                                    }
                                 }
                             } catch (SQLException ex) {
                                 Logger.getLogger(Panel.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                                
-                            
-                            
+
                         } else if (key.isKey_f4()) {
                             exitGame();
                         }
@@ -276,10 +272,10 @@ public class Panel extends JComponent {
                             rocket.update();
                             if (!rocket.check(width, height)) {
                                 rockets.remove(rocket);
-                                if(!player.updateHP(5)){
+                                if (!player.updateHP(5)) {
                                     player.setAlive(false);
                                 };
-                                
+
                             } else {
                                 if (player.isAlive()) {
                                     checkPlayer(rocket);
@@ -294,31 +290,33 @@ public class Panel extends JComponent {
 
         }).start();
     }
+
     public String showScores() throws SQLException {
-    ArrayList msg = scores();
+        ArrayList msg = scores();
         String output = "Player scores TOP 20\n";
         output += "========================= \n";
-    for (int i = 0; i < msg.size(); i++) {
-        String message = msg.get(i).toString();
-        output += message + "\n";
-    }
+        for (int i = 0; i < msg.size(); i++) {
+            String message = msg.get(i).toString();
+            output += message + "\n";
+        }
         output += "=========================\n";
         output += "Start over?";
-        
-    return output;
-}
+
+        return output;
+    }
+
     public ArrayList scores() throws SQLException {
         String sqlScores = "SELECT * FROM scores group by player order by score desc LIMIT 20";
         PreparedStatement pstScores = conSQL.prepareStatement(sqlScores);
         ResultSet rsScores = pstScores.executeQuery();
         ArrayList scores = new ArrayList();
         int i = 1;
-        while(rsScores.next()){
-            
-            scores.add(i +" • "+ rsScores.getString("player")+" • "+rsScores.getInt("score"));
+        while (rsScores.next()) {
+
+            scores.add(i + " • " + rsScores.getString("player") + " • " + rsScores.getInt("score"));
             i++;
         }
-    
+
         return scores;
 
     }
@@ -332,6 +330,21 @@ public class Panel extends JComponent {
         int insert = pstInsertScore.executeUpdate();
         conSQL.commit();
         return insert > 0;
+    }
+
+    private void checkPosition() {
+        if (player.getX() < 0) {
+            player.changeLocation(0, player.getY());
+        }
+            else if(player.getX() >= width-PLAYER_SIZE){
+                    player.changeLocation(width - PLAYER_SIZE, player.getY());
+                    }
+
+         else if (player.getY() < 0) {
+            player.changeLocation(player.getX(), 0);
+        } else if(player.getY() >= height-PLAYER_SIZE){
+            player.changeLocation(player.getX(), height-PLAYER_SIZE);
+        }
     }
 
     private void exitGame() {
@@ -470,8 +483,8 @@ public class Panel extends JComponent {
     }
 
     private void drawBackground() {
-       
-        //g2.drawImage(bg, 1250, 600, this);
+
+        //g2.drawImage(bg, 0, 0, this);
         g2.setColor(new Color(30, 30, 30));
         g2.fillRect(0, 0, width, height);
     }
@@ -501,7 +514,7 @@ public class Panel extends JComponent {
         g2.setColor(Color.WHITE);
         g2.setFont(getFont().deriveFont(Font.BOLD, 15f));
         g2.drawString("Score : " + score, 10, 20);
-        g2.drawString("Player : " + playerName, 1220, 20);
+        g2.drawString("Player : " + playerName, 10, 40);
         if (!player.isAlive()) {
             String text = "GAME OVER";
             String textKey = "Choose options to resume : New Game - F1, Save Score - F2, View Scores - F3, Exit - F4";

@@ -8,6 +8,7 @@ package game.obj;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Path2D;
@@ -123,5 +124,15 @@ public class Player extends HpRender{
          angle = 0;
          speed = 0;
      }
+     
+     public void checkPosition(int width, int height) {
+        Rectangle size = getShape().getBounds();
+        if (x <= -size.getWidth() || x > width ) {
+           changeLocation(x, getY());
+        } else if(y < -size.getHeight() || y > height){
+            changeLocation(getX(), y);
+        }
+
+    }
     
 }

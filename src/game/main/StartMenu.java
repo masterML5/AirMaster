@@ -6,6 +6,7 @@
 package game.main;
 
 import game.component.Panel;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -160,8 +161,12 @@ public class StartMenu extends javax.swing.JFrame {
         if(player == null || player.isEmpty() || " ".equals(player)){
          JOptionPane.showMessageDialog(null, "Unesite ime igraca!", "Greska", JOptionPane.ERROR_MESSAGE);
         }else{
-        new Start(player).setVisible(true);
-        this.dispose();
+            try {
+                new Start(player).setVisible(true);
+                this.dispose();
+            } catch (IOException ex) {
+                Logger.getLogger(StartMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_jButton1MouseReleased
 

@@ -9,6 +9,9 @@ import game.component.Panel;
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 /**
@@ -20,11 +23,11 @@ import javax.swing.JFrame;
 
 public class Start extends JFrame{
     String playerName;
-    public Start(String player){
+    public Start(String player) throws IOException{
         playerName = player;
 init();
 }
-    public void init(){
+    public void init() throws IOException{
         setTitle("Air Master");
         setSize(1200,650);
         setLocationRelativeTo(null);
@@ -36,7 +39,11 @@ init();
         addWindowListener(new WindowAdapter(){
         @Override
         public void windowOpened(WindowEvent e){
-            panel.start(playerName);
+            try {
+                panel.start(playerName);
+            } catch (IOException ex) {
+                Logger.getLogger(Start.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     });
     }
