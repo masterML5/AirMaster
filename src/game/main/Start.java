@@ -26,7 +26,7 @@ init();
 }
     public void init(){
         setTitle("Air Master");
-        setSize(1366,768);
+        setSize(1200,650);
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

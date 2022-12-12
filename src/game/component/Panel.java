@@ -16,12 +16,16 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -33,6 +37,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static javafx.scene.input.DataFormat.URL;
+import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
@@ -54,7 +60,7 @@ public class Panel extends JComponent {
     private Key key;
     private int shotTime;
     private String playerName;
-    
+    private Image bg;
     private final int FPS = 60;
     private final int TARGET_TIME = 1000000000 / FPS;
 
@@ -63,8 +69,13 @@ public class Panel extends JComponent {
     private List<Rocket> rockets;
     private List<Effect> boomEffects;
     private int score = 0;
+   
 
-    public void start(String playername) {
+    public Panel() throws IOException {
+        
+    }
+
+    public void start(String playername) throws IOException {
         try {
             conSQL = DriverManager.getConnection(connectionUrlMySQL);
             conSQL.setAutoCommit(false);
@@ -72,7 +83,8 @@ public class Panel extends JComponent {
             System.out.println(ex);
 
         }
-        
+       
+        bg = Toolkit.getDefaultToolkit().getImage("/game/image/bg.jpg");
         width = getWidth();
         height = getHeight();
         this.playerName = playername;
@@ -458,6 +470,8 @@ public class Panel extends JComponent {
     }
 
     private void drawBackground() {
+       
+        //g2.drawImage(bg, 1250, 600, this);
         g2.setColor(new Color(30, 30, 30));
         g2.fillRect(0, 0, width, height);
     }
