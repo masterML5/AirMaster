@@ -201,13 +201,14 @@ public class StartMenu extends javax.swing.JFrame {
                 + "<b>D</b> - rotacija desno<br>"
                 + "<b>A</b> - rotacija levo<br>"
                 + "<b>SPACE</b> - pucanje (slabija municija)<br>"
-                + "<b>CTRL</b> - pucanje (jaca municija) <br>"
+                + "<b>CTRL</b> - pucanje (jaca municija) - stage 3 <br>"
                 + "<br>"
                 + "<br>"
                 + "Pravila igrice : <br>"
                 + "<b>Ukoliko raketa pobegne avionu (igracu) iz vidokruga igrac gubi 5hp</b> <br>"
                 + "<b>Ukoliko avion (igrac) dodirne raketu gubi onoliko helta koliko raketa ima<b><br>"
-                + "<b>Na svakih 10 ostvarenih poena,brzina raketa se povećava</b><br>"
+                + "<b>Na svakih 10 ostvarenih poena,brzina raketa se povećava i prelazi se u novi stage</b><br>"
+                + "<b>Kada igrac dostigne stage broj 3, dobija bolju municiju</b><br> "
                 + "</html>", "Instrukcije", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jButton3MouseReleased
 
