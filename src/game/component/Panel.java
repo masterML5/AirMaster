@@ -27,6 +27,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -59,7 +60,7 @@ public class Panel extends JComponent {
     private Key key;
     private int shotTime;
     private String playerName;
-    private Image bg;
+    private BufferedImage bg;
     private final int FPS = 60;
     private final int TARGET_TIME = 1000000000 / FPS;
     
@@ -82,7 +83,7 @@ public class Panel extends JComponent {
 
         }
 
-        bg = Toolkit.getDefaultToolkit().createImage("/game/image/bg.jpg");
+        importImg();
 
         width = getWidth();
         height = getHeight();
@@ -484,9 +485,9 @@ public class Panel extends JComponent {
 
     private void drawBackground() {
 
-        //g2.drawImage(bg, 0, 0, this);
-        g2.setColor(new Color(30, 30, 30));
-        g2.fillRect(0, 0, width, height);
+        g2.drawImage(bg, 0, 0, null);
+        //g2.setColor(new Color(30, 30, 30));
+        //g2.fillRect(0, 0, width, height);
     }
 
     private void drawGame() {
@@ -572,5 +573,10 @@ public class Panel extends JComponent {
         } catch (InterruptedException ex) {
             System.out.println(ex);
         }
+    }
+
+    private void importImg() throws IOException {
+        InputStream is = getClass().getResourceAsStream("/game/image/bg.jpg");
+        bg = ImageIO.read(is);
     }
 }
