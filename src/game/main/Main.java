@@ -5,6 +5,10 @@
  */
 package game.main;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Milos
@@ -12,7 +16,11 @@ package game.main;
 public class Main {
     public static void main(String[] args) {
          java.awt.EventQueue.invokeLater(() -> {
-             new StartMenu().setVisible(true);
+             try {
+                 new StartMenu().setVisible(true);
+             } catch (IOException ex) {
+                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+             }
         });
     }
 }

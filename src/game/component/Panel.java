@@ -63,7 +63,7 @@ public class Panel extends JComponent {
     private BufferedImage bg;
     private final int FPS = 60;
     private final int TARGET_TIME = 1000000000 / FPS;
-    
+    private int stage;
     private Player player;
     private List<Bullet> bullets;
     private List<Rocket> rockets;
@@ -196,7 +196,7 @@ public class Panel extends JComponent {
                 float s = 0.5f;
                 while (start) {
                     if (player.isAlive()) {
-                        
+
                         float angle = player.getAngle();
                         if (key.isKey_left()) {
                             angle -= s;
@@ -209,7 +209,11 @@ public class Panel extends JComponent {
                                 if (key.isKey_j()) {
                                     bullets.add(0, new Bullet(player.getX(), player.getY(), player.getAngle(), 5, 3f));
                                 } else {
+                                    if(stage > 3){
                                     bullets.add(0, new Bullet(player.getX(), player.getY(), player.getAngle(), 20, 3f));
+                                    }else{
+                                     bullets.add(0, new Bullet(player.getX(), player.getY(), player.getAngle(), 5, 3f));
+                                    }
                                 }
                             }
                             shotTime++;
@@ -221,7 +225,7 @@ public class Panel extends JComponent {
                         }
 
                         if (key.isKey_space()) {
-                            player.speedUp();   
+                            player.speedUp();
                             checkPosition();
                         } else {
                             player.speedDown();
@@ -270,7 +274,39 @@ public class Panel extends JComponent {
                     for (int i = 0; i < rockets.size(); i++) {
                         Rocket rocket = rockets.get(i);
                         if (rocket != null) {
-                            rocket.update();
+                            if (score < 10) {
+                                stage = 1;
+                                rocket.update();
+                            } else if (score >= 10 && score < 20) {
+                                stage = 2;
+                                rocket.speed = 0.4f;
+                                rocket.update();
+                            } else if (score >= 20 && score < 30) {
+                                stage = 3;
+                                rocket.speed = 0.6f;
+                                rocket.update();
+                            } else if (score >= 30 && score < 40) {
+                                stage = 4;
+                                rocket.speed = 0.8f;
+                                rocket.update();
+                            } else if (score >= 40 && score < 50) {
+                                stage = 5;
+                                rocket.speed = 1f;
+                                rocket.update();
+                            } else if (score >= 50 && score < 60) {
+                                stage = 6;
+                                rocket.speed = 1.2f;
+                                rocket.update();
+                            } else if (score >= 60 && score < 70) {
+                                stage = 7;
+                                rocket.speed = 1.5f;
+                                rocket.update();
+                            } else if (score >= 70) {
+                                stage = 8;
+                                rocket.speed = 2f;
+                                rocket.update();
+                            }
+
                             if (!rocket.check(width, height)) {
                                 rockets.remove(rocket);
                                 if (!player.updateHP(5)) {
@@ -336,15 +372,12 @@ public class Panel extends JComponent {
     private void checkPosition() {
         if (player.getX() < 0) {
             player.changeLocation(0, player.getY());
-        }
-            else if(player.getX() >= width-PLAYER_SIZE){
-                    player.changeLocation(width - PLAYER_SIZE, player.getY());
-                    }
-
-         else if (player.getY() < 0) {
+        } else if (player.getX() >= width - PLAYER_SIZE) {
+            player.changeLocation(width - PLAYER_SIZE, player.getY());
+        } else if (player.getY() < 0) {
             player.changeLocation(player.getX(), 0);
-        } else if(player.getY() >= height-PLAYER_SIZE){
-            player.changeLocation(player.getX(), height-PLAYER_SIZE);
+        } else if (player.getY() >= height - PLAYER_SIZE) {
+            player.changeLocation(player.getX(), height - PLAYER_SIZE);
         }
     }
 
@@ -515,6 +548,7 @@ public class Panel extends JComponent {
         g2.setColor(Color.WHITE);
         g2.setFont(getFont().deriveFont(Font.BOLD, 15f));
         g2.drawString("Score : " + score, 10, 20);
+        g2.drawString("Stage : " + stage, 150, 20);
         g2.drawString("Player : " + playerName, 10, 40);
         if (!player.isAlive()) {
             String text = "GAME OVER";

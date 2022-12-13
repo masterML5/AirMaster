@@ -24,7 +24,7 @@ public class Rocket extends HpRender{
     public static final double ROCKET_SIZE = 50;
     private double x;
     private double y;
-    private final float speed = 0.3f;
+    public  float speed = 0.3f;
     private float angle = 0;
     private final Image image;
     private final Area rocketShap;
