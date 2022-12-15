@@ -73,9 +73,9 @@ public class Player extends HpRender{
         g2.drawImage(speedUp ? image_speed : image, tran,null);
         hpRender(g2,getShape(),y);
         g2.setTransform(oldTransform);
-//        g2.setColor(new Color(15,123,123));
-//        g2.draw(getShape().getBounds());
-//        g2.draw(getShape());
+        g2.setColor(new Color(15,123,123));
+        g2.draw(getShape().getBounds());
+        g2.draw(getShape());
     }
     
     public double getX(){
